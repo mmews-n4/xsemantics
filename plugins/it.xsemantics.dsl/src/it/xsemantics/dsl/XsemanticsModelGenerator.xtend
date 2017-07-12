@@ -14,9 +14,17 @@ import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import com.google.inject.Inject
 import org.eclipse.xtext.documentation.IFileHeaderProvider
 
+/**
+ * Customized version of {@link JvmModelGenerator}
+ */
 class XsemanticsModelGenerator extends JvmModelGenerator {
 	@Inject protected extension ReflectExtensions
 
+	/**
+	 * This method copies logic from {@link JvmModelGenerator#generateFileHeader}
+	 * but it calls {@link #generateFileHeaderComment} to enable custom comment syntax
+	 * in copyright headers.
+	 */
 	override void generateFileHeader(JvmDeclaredType declType, ITreeAppendable appendable, GeneratorConfig config) {
 		val fileHeaderAdapter = declType.eAdapters.filter(FileHeaderAdapter).head
 		if (!fileHeaderAdapter?.headerText.nullOrEmpty) {
@@ -26,6 +34,9 @@ class XsemanticsModelGenerator extends JvmModelGenerator {
 		}
 	}
 
+	/**
+	 * This method prepends the given copyright header text assuming this text is a legal comment.
+	 */
 	def protected generateFileHeaderComment(String headerComment, List<INode> documentationNodes,
 		ITreeAppendable appendable, GeneratorConfig config) {
 
